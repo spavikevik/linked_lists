@@ -15,16 +15,22 @@ class LinkedList
   end
 
   def append(val)
-    return self.to_s if set_value_in_head_if_empty(val)
-    tail.next_node = Node.new(val)
-    self.tail = tail.next_node
-    to_s
+    add val do
+      tail.next_node = Node.new(val)
+      self.tail = tail.next_node
+    end
   end
 
   def prepend(val)
+    add val do
+      new_head = Node.new(val, head)
+      self.head = new_head
+    end
+  end
+
+  def add(val, &add_logic)
     return self.to_s if set_value_in_head_if_empty(val)
-    new_head = Node.new(val, head)
-    self.head = new_head
+    add_logic.call
     to_s
   end
 
@@ -45,7 +51,7 @@ class LinkedList
       return element
     else
       self.tail = at(size-2)
-      (element, tail.next_node, self.size = tail.next_node.value, nil, size-1)[0]
+      (element, tail.next_node = tail.next_node.value, nil)[0]
     end
   end
 
@@ -73,4 +79,6 @@ class LinkedList
       node = node.next_node
     end
   end
+
+  private :head=, :tail=, :add
 end

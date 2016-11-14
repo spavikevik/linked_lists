@@ -29,11 +29,13 @@ class LinkedList
   end
 
   def at(index)
-    node = head
-    index.times do
-      node = node.next_node
+    each_with_index do |elem, i|
+      return elem if i == index
     end
-    return node
+  end
+
+  def find(val)
+    find_index(val)
   end
 
   def pop
@@ -48,7 +50,11 @@ class LinkedList
   end
 
   def to_s
-    
+    map {|e| "( #{e} )"}.join(' -> ') + ' -> nil'
+  end
+
+  def inspect
+    to_s
   end
 
   def set_value_in_head_if_empty(val)
@@ -56,7 +62,7 @@ class LinkedList
   end
 
   def contains?(val)
-    any? {|e| e.value == val}
+    any? {|e| e == val}
   end
 
   def each

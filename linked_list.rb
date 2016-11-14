@@ -1,17 +1,21 @@
 require_relative 'node'
 
 class LinkedList
-  attr_reader :size
+  include Enumerable
+
   attr_accessor :head, :tail
+
   def initialize
     @head = Node.new
-    @size = 1
     @tail = head
+  end
+
+  def size
+    count
   end
 
   def append(val)
     return self.to_s if set_value_in_head_if_empty(val)
-    self.size += 1
     tail.next_node = Node.new(val)
     self.tail = tail.next_node
     to_s
@@ -19,7 +23,6 @@ class LinkedList
 
   def prepend(val)
     return self.to_s if set_value_in_head_if_empty(val)
-    self.size += 1
     new_head = Node.new(val, head)
     self.head = new_head
     to_s
@@ -45,24 +48,23 @@ class LinkedList
   end
 
   def to_s
-    node, string = head, ""
-    while true
-      break unless node
-      string += "( #{node.to_s} ) -> "
-      node = node.next_node
-    end
-
-    return string + "nil"
-  end
-
-  def inspect
-    to_s
+    
   end
 
   def set_value_in_head_if_empty(val)
     head.value = val if head.empty?
   end
 
-  private
-    attr_writer :size
+  def contains?(val)
+    any? {|e| e.value == val}
+  end
+
+  def each
+    node = head
+    loop do
+      break unless node
+      yield node if block_given?
+      node = node.next_node
+    end
+  end
 end

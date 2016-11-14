@@ -75,8 +75,14 @@ class LinkedList
     node = head
     loop do
       break unless node
-      yield node if block_given?
+      yield node
       node = node.next_node
+    end if block_given?
+    return Enumerator.new do |nodes|
+      loop do
+        nodes << node
+        node = node.next_node
+      end
     end
   end
 
